@@ -11,6 +11,7 @@ from .views import (
     QuestionRejectView,
     AnswerVoteView,
     AnswerRejectView,
+    SearchView,
 )
 
 urlpatterns = [
@@ -24,4 +25,5 @@ urlpatterns = [
     path("question-reject/", QuestionRejectView.as_view(), name="QuestionReject"),
     path("answer-Vote/", AnswerVoteView.as_view(), name="AnswerVote"),
     path("answer-reject/", AnswerRejectView.as_view(), name="AnswerReject"),
+    path("search/", SearchView.as_view(), name="Search"),
 ]

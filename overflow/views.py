@@ -1,3 +1,4 @@
+import json
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.generics import (
@@ -65,7 +66,10 @@ class QuestionCreateView(APIView):
     def post(self, request, *args, **kwargs):
         title = request.data.get("title")
         des = request.data.get("des")
-        question = Question.objects.create(user=self.request.user, title=title, des=des)
+        file = request.data["file"]
+        question = Question.objects.create(
+            user=self.request.user, title=title, des=des, image=file
+        )
         question.save()
         return Response(status=HTTP_200_OK)
 
@@ -153,3 +157,12 @@ class AnswerRejectView(APIView):
         vote.save()
         ans.negativevote.add(vote)
         return Response(status=HTTP_200_OK)
+
+
+class SearchView(APIView):
+    def post(self, request, *args, **kwargs):
+        search = request.data.get("search")
+        questions = Question.objects.filter(title__contains=search)
+        ques = json.dumps(list(questions))
+        print(ques)
+        return Response(HTTP_200_OK)

@@ -1,4 +1,5 @@
 from rest_framework import fields, serializers
+from taggit.serializers import TagListSerializerField, TaggitSerializer
 
 # Register serializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -94,6 +95,7 @@ class answerSerializer(serializers.ModelSerializer):
             "user",
             "title",
             "des",
+            "image",
             "questionid",
             "negativevote",
             "positivevote",
@@ -111,10 +113,11 @@ class answerSerializer(serializers.ModelSerializer):
         return commentSerializer(obj.acomment.all(), many=True).data
 
 
-class questionSerializer(serializers.ModelSerializer):
+class questionSerializer(TaggitSerializer, serializers.ModelSerializer):
     positivevote = serializers.SerializerMethodField()
     negativevote = serializers.SerializerMethodField()
     answer = serializers.SerializerMethodField()
+    tags = TagListSerializerField()
 
     class Meta:
         model = Question
@@ -123,6 +126,7 @@ class questionSerializer(serializers.ModelSerializer):
             "user",
             "title",
             "des",
+            "tags",
             "positivevote",
             "negativevote",
             "answer",

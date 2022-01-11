@@ -3,12 +3,17 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.conf import settings
+from rest_framework.fields import ImageField
 from taggit.managers import TaggableManager
 from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin,
     BaseUserManager,
 )
+
+
+def upload_path(instance, filname):
+    return "/".join(["covers", str(instance.title), filname])
 
 
 class UserAccountManager(BaseUserManager):
@@ -106,6 +111,7 @@ class Question(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=30)
     des = models.CharField(max_length=200)
+    image = models.ImageField(upload_to=upload_path, blank=True)
     tags = TaggableManager()
     answer = models.ManyToManyField(Answer, related_name="admin_Answer")
     positivevote = models.ManyToManyField(Qvote, related_name="admin_qvote")
